@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <cstring>
 #include "CreateBuilderImpl.h"
 
 CreateBuilderImpl::CreateBuilderImpl(zhandle_t *zk) {
@@ -10,7 +11,8 @@ CreateBuilderImpl::CreateBuilderImpl(zhandle_t *zk) {
 }
 
 int CreateBuilderImpl::forPath(string path) {
-    return this->forPath(path, NULL);
+    string realPath;
+    return this->forPath(path, NULL,realPath);
 }
 
 PathableAndWriteable<int> *CreateBuilderImpl::withFlags(int flags) {
@@ -27,5 +29,18 @@ int CreateBuilderImpl::forPath(string path, const char *data) {
     } else {
         length = char_traits<const char>::length(data);
     }
-    return zoo_create(this->zk, path.c_str(), data, length, &ZOO_OPEN_ACL_UNSAFE, flags, buffer, sizeof(buffer) - 1);
+    return  zoo_create(this->zk, path.c_str(), data, length, &ZOO_OPEN_ACL_UNSAFE, flags, buffer, sizeof(buffer) - 1);
+}
+
+int CreateBuilderImpl::forPath(string path, const char *data, string &realPath) {
+    char buffer[512];
+    int length;
+    if (data == NULL) {
+        length = -1;
+    } else {
+        length = char_traits<const char>::length(data);
+    }
+    int rc =  zoo_create(this->zk, path.c_str(), data, length, &ZOO_OPEN_ACL_UNSAFE, flags, buffer, sizeof(buffer) - 1);
+    realPath.assign(buffer,std::strlen(buffer));
+    return rc;
 }

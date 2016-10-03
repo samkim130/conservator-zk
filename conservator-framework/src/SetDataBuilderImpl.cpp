@@ -23,6 +23,18 @@ ZOOAPI int SetDataBuilderImpl::forPath(string path, const char *data) {
     return zoo_set(zk, path.c_str(), data, length, version);
 }
 
+ZOOAPI int SetDataBuilderImpl::forPath(string path, const char *data, string& realPath) {
+   int length;
+    if(data == NULL) {
+        length = -1;
+    } else {
+        length = char_traits<const char>::length(data);
+    } 
+    realPath = path;
+    return zoo_set(zk, path.c_str(), data, length, version);
+}
+
+
 PathableAndWriteable<int>* SetDataBuilderImpl::withVersion(int version) {
     this->version = version;
     return (PathableAndWriteable<int> *) this;
