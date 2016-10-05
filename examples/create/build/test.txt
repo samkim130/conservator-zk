@@ -1,0 +1,19 @@
+Created correctly: 
+watcherFn is null calling zoo_exists on /foo
+Foo exists
+Retrieved data: mod
+Ephemeral created correctly
+strings is 0x7fff799c54a0
+strings.count is 1
+returning results of 0x7fff799c5700
+bar0000000000,
+strings is 0x7fff799c54a0
+strings.count is 0
+returning results of 0x7fff799c5720
+
+Created correctly
+Real path is /yada/test0000000000
+strings is 0x7fff799c54a0
+strings.count is 1
+returning results of 0x7fff799c5740
+test0000000000,exists watcher function called

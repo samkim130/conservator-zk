@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/quique/src/conservator/examples/create/example_conservator.cpp
+conservator/ConservatorFrameworkFactory.h
+-
+zookeeper/zookeeper.h
+-
+iostream
+-
+string
+-
+
