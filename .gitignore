@@ -7,3 +7,4 @@ cmake_install.cmake
 build/*
 conservator-framework/tests/CMakeFiles/*
 .idea
+install_manifest.txt
