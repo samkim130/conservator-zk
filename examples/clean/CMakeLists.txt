@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
-project(conservator_example)
+project(conservator_clean)
 
-file(GLOB EXAMPLE_SRC *.cpp)
+file(GLOB CLEAN_SRC clean_example.cpp)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
@@ -22,6 +22,7 @@ include_directories(${CONSERVATOR_INCLUDE_DIR}/conservator)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-add_executable(example ${EXAMPLE_SRC})
+add_executable(clean_example ${CLEAN_SRC})
 
-target_link_libraries(example ${ZOOKEEPER_LIBRARIES} ${CONSERVATOR_LIBRARIES})
+target_link_libraries(clean_example ${ZOOKEEPER_LIBRARIES} ${CONSERVATOR_LIBRARIES})
+
