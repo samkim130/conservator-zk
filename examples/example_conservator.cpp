@@ -1,7 +1,40 @@
 #include <conservator/ConservatorFrameworkFactory.h>
 #include <iostream>
+#include <string>
 
 using namespace std;
+
+string state2String(int state){
+  if (state == 0)
+    return "CLOSED_STATE";
+  if (state == ZOO_CONNECTING_STATE)
+    return "CONNECTING_STATE";
+  if (state == ZOO_ASSOCIATING_STATE)
+    return "ASSOCIATING_STATE";
+  if (state == ZOO_CONNECTED_STATE)
+    return "CONNECTED_STATE";
+  if (state == ZOO_READONLY_STATE)
+    return "READONLY_STATE";
+  if (state == ZOO_EXPIRED_SESSION_STATE)
+    return "EXPIRED_SESSION_STATE";
+  if (state == ZOO_AUTH_FAILED_STATE)
+    return "AUTH_FAILED_STATE";
+
+  return "INVALID_STATE";
+}
+
+
+void get_watcher_fn(zhandle_t *zh, int type,
+                       int state, const char *path,void *watcherCtx) {
+    cout << "get watcher function called for path: " << path <<endl;
+    cout << "New state is " << state2String(state)<<endl;
+    // reset the watch
+    ConservatorFramework* framework = (ConservatorFramework *) watcherCtx;
+    if(framework->checkExists()->forPath(path)) {
+        framework->getData()->withWatcher(get_watcher_fn, framework)->forPath(path);
+    }
+}
+
 
 int main(int argc, char** argv){
     string yadayada = (argc == 2)? argv[1] : "test";
@@ -21,18 +54,28 @@ int main(int argc, char** argv){
     //Verify that znode exists in the Zookeeper Server
     auto check = framework->checkExists()->forPath("/foo");
     if(check == ZOK)
+    {
       cout<<"Foo exists"<<endl;
+      framework->setData()->forPath("/foo","mod");
+    }
     else
+    {
       cout<<"Failed creation of foo"<<endl;
+    }
     //Get the data for the created path, you could check for exists and then get the data.
     string data = framework->getData()->forPath("/foo");
     cout<<"Retrieved data: "<<data<<endl;
     //Create an ephemeral and sequential node.
     auto ephemeral = framework->create()->withFlags(ZOO_EPHEMERAL|ZOO_SEQUENCE)->forPath("/foo/bar");
     if(ephemeral == ZOK)
+    {
+      framework->getData()->withWatcher(get_watcher_fn, framework)->forPath("/foo/");
       cout<<"Ephemeral created correctly"<<endl;
+    }
     else
+    {
       cout<<"Error creating ephimeral"<<endl;
+    }
     //Get children for a given znode
     vector<string> children = framework->getChildren()->forPath("/foo");
     //Print znode noames
