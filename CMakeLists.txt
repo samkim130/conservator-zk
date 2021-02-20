@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 project(conservator)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
@@ -14,7 +14,7 @@ find_package(Check REQUIRED)
 
 enable_testing()
 
-include_directories(${CHECK_INCLUDE_DIRS})
+include_directories(${CHECK_INCLUDE_DIR})
 include_directories(${ZOOKEEPER_INCLUDE_DIR}/zookeeper)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -41,6 +41,8 @@ add_library(conservator-framework SHARED
   conservator-framework/src/SetACLBuilderImpl.cpp
   conservator-framework/src/SetACLBuilderImpl.h
   conservator-framework/src/Flagable.h)
+
+target_link_libraries(conservator-framework PUBLIC ${ZOOKEEPER_LIBRARIES} ${CHECK_LIBRARIES} -lsubunit -lrt ${CMAKE_THREAD_LIBS_INIT})
 
 add_subdirectory(conservator-framework/tests)
 

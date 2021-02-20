@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 project(conservator_example)
 
 file(GLOB EXAMPLE_SRC example_conservator.cpp)
@@ -16,7 +16,7 @@ find_package(Check REQUIRED)
 find_package(Conservator REQUIRED)
 #enable_testing()
 
-include_directories(${CHECK_INCLUDE_DIRS})
+include_directories(${CHECK_INCLUDE_DIR})
 include_directories(${ZOOKEEPER_INCLUDE_DIR}/zookeeper)
 include_directories(${CONSERVATOR_INCLUDE_DIR}/conservator)
 
@@ -24,4 +24,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_executable(example ${EXAMPLE_SRC})
 
-target_link_libraries(example ${ZOOKEEPER_LIBRARIES} ${CONSERVATOR_LIBRARIES})
+target_link_libraries(example ${ZOOKEEPER_LIBRARIES} ${CONSERVATOR_LIBRARIES} ${CHECK_LIBRARIES} -lsubunit -lrt ${CMAKE_THREAD_LIBS_INIT})
