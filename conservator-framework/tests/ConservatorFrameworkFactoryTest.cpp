@@ -102,8 +102,10 @@ START_TEST(framework_exists_with_watch) {
     ck_assert_int_eq(ZNONODE, framework->checkExists()->withWatcher(exists_watcher_fn, ((void *) framework.get()))->forPath("/foo"));
     ck_assert_int_eq(0, exists_watcher_called);
     framework->create()->forPath("/foo");
+    usleep(500000); // wait 0.5s
     ck_assert_int_eq(1, exists_watcher_called);
     framework->deleteNode()->forPath("/foo");
+    usleep(500000); // wait 0.5s
     ck_assert_int_eq(2, exists_watcher_called);
 }
 END_TEST
@@ -130,7 +132,9 @@ START_TEST(framework_getdata_no_node) {
     ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
     unique_ptr<ConservatorFramework> framework = factory.newClient("localhost:2181");
     framework->start();
-    ck_assert_str_eq("", framework->getData()->forPath("/foo").c_str());
+    auto data = framework->getData();
+    auto forpath = data->forPath("/foo");
+    ck_assert_str_eq("", forpath.c_str());
 }
 END_TEST
 
@@ -153,6 +157,7 @@ START_TEST(framework_getdata_with_watch) {
     string r = framework->getData()->withWatcher(get_watcher_fn, ((void *) framework.get()))->forPath("/foo");
     ck_assert_str_eq("bar", r.c_str());
     framework->setData()->forPath("/foo", (char *) "bar");
+    usleep(500000); // wait 0.5s
     ck_assert_int_eq(1, get_watcher_called);
 }
 END_TEST
@@ -225,6 +230,7 @@ START_TEST(framework_getchildren_with_watch)
     framework->getChildren()->withWatcher(get_child_watcher_fn, &framework)->forPath("/flintstones");
     ck_assert_int_eq(0, get_child_watcher_called);
     framework->create()->forPath("/flintstones/wilma");
+    usleep(500000); // wait 0.5s
     ck_assert_int_eq(1, get_child_watcher_called);
  }
 END_TEST
