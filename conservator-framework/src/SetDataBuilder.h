@@ -14,7 +14,7 @@
 #include <zookeeper.h>
 
 template<class T>
-class SetDataBuilder : PathableAndWriteable<int>, public Versionable<int> {
+class SetDataBuilder : public PathableAndWriteable<int>, public Versionable<int> {
 public:
     virtual ~SetDataBuilder() {};
     virtual T forPath(string path) = 0;

@@ -11,13 +11,16 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
 find_package(Threads REQUIRED)
 find_package(Zookeeper REQUIRED)
 find_package(Check REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 enable_testing()
 
-include_directories(${CHECK_INCLUDE_DIR})
+# include_directories(${CHECK_INCLUDE_DIR})
+include_directories(/opt/homebrew/include)
 include_directories(${ZOOKEEPER_INCLUDE_DIR}/zookeeper)
+include_directories(${OPENSSL_INCLUDE_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DTHREADED -DHAVE_OPENSSL_H")
 
 add_library(conservator-framework SHARED
   conservator-framework/src/ConservatorFramework.cpp
@@ -42,7 +45,8 @@ add_library(conservator-framework SHARED
   conservator-framework/src/SetACLBuilderImpl.h
   conservator-framework/src/Flagable.h)
 
-target_link_libraries(conservator-framework PUBLIC ${ZOOKEEPER_LIBRARIES} ${CHECK_LIBRARIES} -lsubunit -lrt ${CMAKE_THREAD_LIBS_INIT})
+# target_link_libraries(conservator-framework PUBLIC ${ZOOKEEPER_LIBRARIES} ${CHECK_LIBRARIES} -lsubunit -lrt ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(conservator-framework PUBLIC ${ZOOKEEPER_LIBRARIES} /opt/homebrew/lib/libcheck.dylib ${CMAKE_THREAD_LIBS_INIT})
 
 add_subdirectory(conservator-framework/tests)
 
