@@ -19,6 +19,11 @@ unique_ptr<ConservatorFramework> ConservatorFrameworkFactory::newClient(string c
     return unique_ptr<ConservatorFramework>(new ConservatorFramework(connectString, timeout, cid, znode_size));
 }
 
+unique_ptr<ConservatorFramework> ConservatorFrameworkFactory::newClient(string connectString, int timeout, clientid_t *cid,
+                                                            int znode_size, watcher_fn_v2 zk_init_watcher_cb) {
+    return unique_ptr<ConservatorFramework>(new ConservatorFramework(connectString, timeout, cid, znode_size, zk_init_watcher_cb));
+}
+
 
 
 

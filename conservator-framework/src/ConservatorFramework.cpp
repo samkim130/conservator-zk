@@ -18,6 +18,7 @@ void watcher(zhandle_t *zzh, int type, int state, const char *path,
         framework->connectCondition.notify_all();
         connectLock.unlock();
     }
+    framework->zk_init_watcher_cb(zzh, type, state, path, watcherCtx);
 };
 
 ConservatorFramework::ConservatorFramework(string connectString) {
@@ -40,6 +41,15 @@ ConservatorFramework::ConservatorFramework(string connectString, int timeout, cl
     this->timeout = timeout;
     this->cid = cid;
     this->znode_size = znode_size;
+}
+
+ConservatorFramework::ConservatorFramework(string connectString, int timeout, clientid_t *cid, int znode_size,
+                                            watcher_fn_v2 zk_init_watcher_cb) {
+    this->connectString = connectString;
+    this->timeout = timeout;
+    this->cid = cid;
+    this->znode_size = znode_size;
+    this->zk_init_watcher_cb = zk_init_watcher_cb;
 }
 
 void ConservatorFramework::start() {

@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 #include <mutex>
+#include <functional>
 #include <condition_variable>
 #include "GetDataBuilder.h"
 #include "GetDataBuilderImpl.h"
@@ -26,6 +27,9 @@
 
 using namespace std;
 
+typedef function<void(zhandle_t *zh, int type,
+                            int state, const char *path, void *watcherCtx)> watcher_fn_v2;
+
 class ConservatorFramework {
 
 public:
@@ -34,6 +38,7 @@ public:
     ConservatorFramework(string connectString, int timeout);
     ConservatorFramework(string connectString, int timeout, clientid_t *cid);
     ConservatorFramework(string connectString, int timeout, clientid_t *cid, int znode_size);
+    ConservatorFramework(string connectString, int timeout, clientid_t *cid, int znode_size, watcher_fn_v2 zk_init_watcher_cb);
     void start();
     void close();
     ZOOAPI int getState();
@@ -62,6 +67,7 @@ private:
     bool connected = false;
     mutex connectMutex;
     condition_variable connectCondition;
+    watcher_fn_v2 zk_init_watcher_cb = [](zhandle_t *zzh, int type, int state, const char *path, void *watcherCtx) {};
 
     friend void watcher(zhandle_t *zzh, int type, int state, const char *path,
                  void *watcherCtx);
