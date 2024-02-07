@@ -1,8 +1,27 @@
 # Overview
 
-This is a fork of the project https://github.com/rjenkins/conservator.
+This is a fork of the project https://github.com/rjenkins/conservator + some update by gatech staff.
 
-Conservator is a Zookeeper Client library written in C++. It's not a direct port of [Apache Curator](http://curator.apache.org/) but tries to mirror the simplicity and fluent nature of the [CuratorFramework](http://curator.apache.org/apidocs/) API.  
+Conservator is a Zookeeper Client library written in C++. It's not a direct port of [Apache Curator](http://curator.apache.org/) but tries to mirror the simplicity and fluent nature of the [CuratorFramework](http://curator.apache.org/apidocs/) API.
+
+This repo contains the build set up for macOS using homebrew as well as minor additional watcher features for default watch when `zookeeper_init` is called.
+This is for better error handling when clients encounter network partition and client doesn't realize it has been disconnected until the watcher is triggered upon reconnect.
+
+Read more [here](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html). Quote from ZK site:
+```
+...
+
+Example state transitions for an expired session as seen by the expired session's watcher:
+
+'connected' : session is established and client is communicating with cluster (client/server communication is operating properly)
+.... client is partitioned from the cluster
+'disconnected' : client has lost connectivity with the cluster
+.... time elapses, after 'timeout' period the cluster expires the session, nothing is seen by client as it is disconnected from cluster
+.... time elapses, the client regains network level connectivity with the cluster
+'expired' : eventually the client reconnects to the cluster, it is then notified of the expiration
+
+...
+```
 
 ## Installing
 
